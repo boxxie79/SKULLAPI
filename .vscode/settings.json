@@ -1,0 +1,21 @@
+{
+    "figura.librariesFolderPath": "/home/boxxie79/.local/share/.minecraft/figura/avatars/libraries/",
+    "Lua.diagnostics.globals": [
+        "textures",
+        "models",
+        "pings",
+        "host",
+        "events",
+        "_chatting",
+        "animations",
+        "avatar",
+        "action_wheel",
+        "nameplate",
+        "client",
+        "_afkTimer"
+    ],
+    "Lua.diagnostics.disable": [
+        "undefined-global",
+        "duplicate-set-field"
+    ]
+}

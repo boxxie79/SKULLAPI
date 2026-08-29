@@ -9,30 +9,31 @@
 ]]
 
 --[[
-        boxxie's 💀 api
+    boxxie79's skull api
+    v1.0.0 (release)
+    https://github.com/boxxie79/SKULLAPI
 ]]
-
--- v1.0.0
 
 local skullapi = {}
 skullapi.__index = skullapi
 
 skullapi.types = {}
 skullapi.skulls = {}
+skullapi.debugMode = false
 local pivot = models:newPart("skullapitextpivot","SKULL"):setPos(0,16,0)
 local ptext = pivot:newPart("idc","CAMERA"):newText("skullapidebugtext")
 :setOutline(true):setOutlineColor(0,0,0):setSeeThrough(true)
 :setScale(0.15):setAlignment("CENTER")
 
-skullapi.debugMode = true
-
 function events.skull_render(delta,block,item,entity,mode)
     local id = ""
+
     local name = ""
     local redstone = 0
     local pos
     local player = ""
     local swinging = false
+
     if block then
         local data = block:getEntityData()
         if data and data.custom_name then
@@ -70,9 +71,10 @@ function events.skull_render(delta,block,item,entity,mode)
     end
     if block then
         for name,entity in pairs(world:getPlayers()) do
-            if entity:getTargetedBlock() == block and entity:getSwingTime() > 1 and not skullapi.skulls[id].active then
+            if entity:getTargetedBlock():getPos() == block:getPos() and entity:getSwingTime() > 1 and not skullapi.skulls[id].active then
                 skullapi.skulls[id].active = entity
                 skullapi.skulls[id].triggered = true
+                -- log(block)
             end
             if skullapi.skulls[id].active and skullapi.skulls[id].active:getSwingTime() < 1 then
                 skullapi.skulls[id].active = false
@@ -105,10 +107,11 @@ function events.skull_render(delta,block,item,entity,mode)
     if skullapi.debugMode then
         debugText = ":pencil: "..name..
         "\n:4k: "..mode..
-        "\n:paw: "..tostring(skullapi.skulls[id].active)
+        "\n:paw: "..tostring(skullapi.skulls[id].triggered)
         if entity then
             debugText = debugText..
-            " :chess: "..player
+            "\n:chess: "..player..
+            " :mci_diamond_sword: "..tostring(swinging)
         elseif block then
             debugText = debugText..
             " :mcb_redstone: "..redstone..
@@ -120,8 +123,8 @@ function events.skull_render(delta,block,item,entity,mode)
         :setScale(mode:find("FIRST") and 0.03 or 0.2)
         :setPos(mode == "FIRST_PERSON_RIGHT_HAND" and 2 or mode == "FIRST_PERSON_LEFT_HAND" and -2 or 0,mode:find("FIRST_PERSON") and 0 or 6,0)
     end
-    ptext:setText(debugText)
     
+    ptext:setText(debugText)
 end
 
 function events.tick()
@@ -142,6 +145,14 @@ function skullapi:setNames(t)
     self.names = t
     return self
 end
+
+-- function skullapi:setMode(t)
+--     -- 0 - default, usable everywhere
+--     -- 1 - only usable as item
+--     -- 2 - only usable as block
+--     self.names = t
+--     return self
+-- end
 
 function skullapi:setModel(t)
     self.modelpart = t

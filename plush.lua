@@ -19,10 +19,11 @@ skullapi:newType("fumo")
 
     if not skull.animTime then
         skull.animTime = 1
+        skull.rotation = 0
     end
 
     fumos:setPos(0,mode:find("HEAD") and 8 or 0,0)
-
+    :setRot(0,skull.rotation+math.lerp(0,skull.redstone,delta),0)
     :setScale(
         1,
         skull.animTime+(skull.animTime == 1 and 0 or math.lerp(0,0.05,delta)),
@@ -44,5 +45,10 @@ end):setTickFunction(function(skull)
     end
     if skull.animTime > 1 then
         skull.animTime = 1
+    end
+    if skull.redstone > 0 then
+        skull.rotation = skull.rotation + skull.redstone
+    else
+        skull.rotation = 0
     end
 end)

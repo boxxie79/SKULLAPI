@@ -10,7 +10,7 @@
 
 --[[
     boxxie79's skull api
-    v1.0.0 (release)
+    v1.0.1 (hotfix)
     https://github.com/boxxie79/SKULLAPI
 ]]
 
@@ -31,8 +31,6 @@ function events.skull_render(delta,block,item,entity,mode)
     local name = ""
     local redstone = 0
     local pos
-    local player = ""
-    local swinging = false
 
     if block then
         local data = block:getEntityData()
@@ -48,18 +46,18 @@ function events.skull_render(delta,block,item,entity,mode)
         pos = nil
     end
     if entity and entity:isLiving() then
-        player = entity:getName()
-        swinging = entity:isSwingingArm()
         pos = entity:getPos()
-        id = player.."_"..mode
+        id = entity:getName().."_"..mode
     end
 
     if not skullapi.skulls[id] then
         skullapi.skulls[id] = {}
     end
     skullapi.skulls[id].name = name
+    skullapi.skulls[id].redstone = redstone
     skullapi.skulls[id].pos = pos
     skullapi.skulls[id].triggered = false
+    
     --interact
     if entity then
         if entity:isSwingingArm() and not skullapi.skulls[id].active then
@@ -110,8 +108,8 @@ function events.skull_render(delta,block,item,entity,mode)
         "\n:paw: "..tostring(skullapi.skulls[id].triggered)
         if entity then
             debugText = debugText..
-            "\n:chess: "..player..
-            " :mci_diamond_sword: "..tostring(swinging)
+            "\n:chess: "..entity:getName()..
+            " :mci_diamond_sword: "..tostring(entity:isSwingingArm())
         elseif block then
             debugText = debugText..
             " :mcb_redstone: "..redstone..

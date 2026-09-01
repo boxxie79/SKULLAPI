@@ -136,6 +136,7 @@ end
 function skullapi:newType(name)
     skullapi.types[name] = setmetatable({},skullapi)
     skullapi.types[name].func = {}
+    skullapi.types[name].names = {name}
     return skullapi.types[name]
 end
 

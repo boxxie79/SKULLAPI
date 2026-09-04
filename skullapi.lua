@@ -28,6 +28,18 @@ local ptext = pivot:newPart("idc","CAMERA"):newText("skullapidebugtext")
 :setOutline(true):setOutlineColor(0,0,0):setSeeThrough(true)
 :setScale(0.15):setAlignment("CENTER")
 
+local function runSkull(type,isThisType,id,d,b,i,e,m)
+    type.modelpart:setVisible(isThisType)
+    if isThisType then
+        if type.func.render then
+            type.func.render(skullapi.skulls[id],d,b,i,e,m)
+        end
+        if type.func.trigger and skullapi.skulls[id].triggered then
+            type.func.trigger(skullapi.skulls[id],d,b,i,e,m)
+        end
+    end
+end
+
 function events.skull_render(delta,block,item,entity,mode)
     local id = ""
 
@@ -95,19 +107,11 @@ function events.skull_render(delta,block,item,entity,mode)
                 skullapi.skulls[id].type = _
             end
         end
-        type.modelpart:setVisible(isThisType)
-        if isThisType then
-            if type.func.render then
-                type.func.render(skullapi.skulls[id],delta,block,item,entity,mode)
-            end
-            if type.func.trigger and skullapi.skulls[id].triggered then
-                type.func.trigger(skullapi.skulls[id],delta,block,item,entity,mode)
-            end
-        end
+        runSkull(type,isThisType,id,delta,block,item,entity,mode)
     end
 
-    if skullapi.default then
-        skullapi.default:setVisible(not hasType)
+    if skullapi.types["default"] then 
+        runSkull(skullapi.types["default"],not hasType,id,delta,block,item,entity,mode)
     end
 
     local debugText
@@ -151,8 +155,9 @@ function skullapi:newType(name)
 end
 
 function skullapi:setDefaultModel(p)
-    skullapi.default = p
-    return skullapi
+    -- This function is deprecated, but
+    -- I can't just break this if Fixwery ever decides to update!
+    return skullapi:newType("default"):setModel(p)
 end
 
 function skullapi:setNames(t)

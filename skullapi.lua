@@ -20,6 +20,9 @@ skullapi.__index = skullapi
 skullapi.types = {}
 skullapi.skulls = {}
 skullapi.debugMode = false
+
+skullapi.default = nil
+
 local pivot = models:newPart("skullapitextpivot","SKULL"):setPos(0,16,0)
 local ptext = pivot:newPart("idc","CAMERA"):newText("skullapidebugtext")
 :setOutline(true):setOutlineColor(0,0,0):setSeeThrough(true)
@@ -80,12 +83,15 @@ function events.skull_render(delta,block,item,entity,mode)
         end
     end
 
+    local hasType = false
+
     --render
     for _,type in pairs(skullapi.types) do
         local isThisType = false
         for i=1,#type.names do
             if name:lower():find(type.names[i]:lower()) then
                 isThisType = true
+                hasType = true
                 skullapi.skulls[id].type = _
             end
         end
@@ -98,6 +104,10 @@ function events.skull_render(delta,block,item,entity,mode)
                 type.func.trigger(skullapi.skulls[id],delta,block,item,entity,mode)
             end
         end
+    end
+
+    if skullapi.default then
+        skullapi.default:setVisible(not hasType)
     end
 
     local debugText
@@ -138,6 +148,11 @@ function skullapi:newType(name)
     skullapi.types[name].func = {}
     skullapi.types[name].names = {name}
     return skullapi.types[name]
+end
+
+function skullapi:setDefaultModel(p)
+    skullapi.default = p
+    return skullapi
 end
 
 function skullapi:setNames(t)

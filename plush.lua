@@ -2,6 +2,13 @@ local skullapi = require("./skullapi")
 
 local fumos = models.fumo.SKULL.fumos
 
+local default = models.fumo.SKULL.default
+
+default:newText("explainer"):setText("This is the default model.\nIt shows when no valid type is selected.\nIt's optional, and you can remove the\n§d:setDefaultModel()§r function to disable it.")
+:setScale(0.2):setAlignment("CENTER"):setPos(0,8,0)
+skullapi:setDefaultModel(default)
+
+
 skullapi:newType("fumo")
 :setNames({"fumo","plush"})
 :setModel(fumos)
